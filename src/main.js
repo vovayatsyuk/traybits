@@ -1,11 +1,14 @@
 const { invoke } = window.__TAURI__.core;
 
-const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+// const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const STORAGE_KEY = "numbrays_user_code";
 const FREQ_KEY = "numbrays_frequency";
-const DEFAULT_CODE = `const res = await fetch("https://packagist.org/packages/psr/log/stats.json");
-const data = await res.json();
-return new Intl.NumberFormat().format(data.downloads.total)`;
+const DEFAULT_CODE = `export default async () => {
+  const res = await fetch("https://packagist.org/packages/psr/log/stats.json");
+  const data = await res.json();
+  return new Intl.NumberFormat().format(data.downloads.total)
+}
+`;
 
 let intervalId = null;
 
@@ -23,14 +26,25 @@ async function startPolling(fn, frequency) {
   return result;
 }
 
+async function createFn(code) {
+  // return new AsyncFunction(code);
+  const blob = new Blob([code], { type: 'text/javascript' });
+  const url = URL.createObjectURL(blob);
+  const mod = await import(/* @vite-ignore */ url);
+  URL.revokeObjectURL(url);
+  return mod.default;
+}
+
 const code = localStorage.getItem(STORAGE_KEY) ?? DEFAULT_CODE;
 const frequency = localStorage.getItem(FREQ_KEY) ?? 60;
+
+startPolling(await createFn(code), frequency);
+
 const textarea = document.getElementById("code");
 const freqInput = document.getElementById("frequency");
 
-startPolling(new AsyncFunction(code), frequency);
 textarea.value = code;
-freqInput.value = localStorage.getItem(FREQ_KEY) ?? 60;
+freqInput.value = frequency;
 
 document.getElementById("save").addEventListener("click", async () => {
   const statusEl = document.getElementById("status");
@@ -47,7 +61,7 @@ document.getElementById("save").addEventListener("click", async () => {
   localStorage.setItem(FREQ_KEY, seconds);
 
   try {
-    statusEl.textContent = await startPolling(new AsyncFunction(textarea.value), seconds);
+    statusEl.textContent = await startPolling(await createFn(textarea.value), seconds);
     setTimeout(() => statusEl.textContent = "", 3000);
   } catch (e) {
     statusEl.textContent = e.message;

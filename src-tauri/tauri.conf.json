@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "numbrays",
+  "productName": "Numbrays",
   "version": "0.1.0",
   "identifier": "com.vova.numbrays",
   "build": {
@@ -15,8 +15,8 @@
       {
         "label": "main",
         "title": "Numbrays",
-        "width": 850,
-        "height": 500,
+        "width": 900,
+        "height": 550,
         "visible": false
       }
     ],
