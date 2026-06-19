@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-100">
   <head>
     <meta charset="UTF-8" />
     <title>Numbrays</title>
@@ -7,18 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="/main.js" defer></script>
   </head>
-  <body>
-    <div>
-      <label for="frequency">Frequency (seconds)</label>
-      <input id="frequency" type="number" min="1" value="60">
+  <body class="flex flex-col h-full">
+    <div class="m-4 bg-white rounded-lg shadow flex flex-col divide-y divide-gray-200 h-full">
+      <div class="flex items-center px-4 py-4">
+        <label for="frequency">Frequency (seconds)</label>
+        <input class="ml-auto text-right rounded-md" id="frequency" type="number" min="1" value="60">
+      </div>
+      <div class="flex flex-col px-4 py-4 h-full">
+        <label for="user-code">Code</label>
+        <textarea id="user-code" class="mt-1 rounded-md break-all h-full font-mono"></textarea>
+      </div>
     </div>
-    <div>
-      <label for="user-code">Code</label>
-      <textarea id="user-code"></textarea>
-    </div>
-    <div class="actions">
-      <button id="save-btn">Save &amp; Run</button>
-      <div id="status"></div>
+    <div class="m-4 mt-auto bg-white rounded-lg shadow flex gap-4 items-center justify-end px-4 py-4">
+      <div id="status" class="text-xs"></div>
+      <button id="save-btn" class="rounded-md bg-gray-800 text-white px-2.5 py-1">Save &amp; Run</button>
     </div>
   </body>
 </html>

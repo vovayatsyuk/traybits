@@ -51,15 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(STORAGE_KEY, textarea.value);
     localStorage.setItem(FREQ_KEY, seconds);
     try {
+      statusEl.classList.remove("text-red-500")
       statusEl.textContent = await updateTray();
-      statusEl.className = "success";
       startPolling();
       setTimeout(() => {
         statusEl.textContent = "";
       }, 3000);
     } catch (e) {
       statusEl.textContent = e.message;
-      statusEl.className = "error";
+      statusEl.classList.add("text-red-500")
     }
   });
 });
