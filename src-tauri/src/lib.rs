@@ -30,19 +30,25 @@ pub fn run() {
             }
         })
         .setup(|app| {
+            #[cfg(target_os = "macos")]
+            app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
             let updated_at_i =
                 MenuItem::with_id(app, "updated_at", "Updated at --:--", false, None::<&str>)?;
-            let preferences_i =
-                MenuItem::with_id(app, "preferences", "Preferences", true, None::<&str>)?;
+            let settings_i =
+                MenuItem::with_id(app, "settings", "Settings...", true, Some("Cmd+,"))?;
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-            let menu = Menu::with_items(app, &[&updated_at_i, &preferences_i, &quit_i])?;
+            let menu = Menu::with_items(app, &[
+                &updated_at_i,
+                &settings_i,
+                &quit_i
+            ])?;
 
             let tray = TrayIconBuilder::new()
                 .menu(&menu)
                 .show_menu_on_left_click(true)
-                .icon(app.default_window_icon().unwrap().clone())
                 .on_menu_event(|app, event| match event.id.as_ref() {
-                    "preferences" => {
+                    "settings" => {
                         if let Some(window) = app.get_webview_window("main") {
                             let _ = window.show();
                             let _ = window.set_focus();
@@ -54,6 +60,9 @@ pub fn run() {
                     _ => {}
                 })
                 .build(app)?;
+
+            #[cfg(target_os = "linux")]
+            let _ = tray.set_icon(Some(app.default_window_icon().unwrap().clone()));
 
             app.manage(TrayState(tray.id().clone()));
             app.manage(UpdatedAtState(updated_at_i));

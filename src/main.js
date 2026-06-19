@@ -1,65 +1,56 @@
 const { invoke } = window.__TAURI__.core;
 
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const STORAGE_KEY = "numbrays_user_code";
 const FREQ_KEY = "numbrays_frequency";
 const DEFAULT_CODE = `const res = await fetch("https://packagist.org/packages/psr/log/stats.json");
 const data = await res.json();
 return new Intl.NumberFormat().format(data.downloads.total)`;
 
-const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-
 let intervalId = null;
 
-function loadCode() {
-  return localStorage.getItem(STORAGE_KEY) ?? DEFAULT_CODE;
-}
-
-async function updateTray() {
-  const title = await new AsyncFunction(loadCode())();
-  if (typeof title !== "string") {
-    throw new Error("Script must return a string");
-  }
+async function updateTray(fn) {
+  const title = await fn();
+  if (typeof title !== "string") throw new Error("Script must return a string");
   invoke("set_tray_title", { title });
   return title;
 }
 
-function startPolling() {
+async function startPolling(fn, frequency) {
   clearInterval(intervalId);
-  intervalId = setInterval(updateTray, (parseInt(localStorage.getItem(FREQ_KEY)) || 60) * 1000);
+  const result = await updateTray(fn);
+  intervalId = setInterval(() => updateTray(fn), frequency * 1000);
+  return result;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  updateTray();
-  startPolling();
+const code = localStorage.getItem(STORAGE_KEY) ?? DEFAULT_CODE;
+const frequency = localStorage.getItem(FREQ_KEY) ?? 60;
+const textarea = document.getElementById("code");
+const freqInput = document.getElementById("frequency");
 
-  const textarea = document.getElementById("user-code");
-  const freqInput = document.getElementById("frequency");
+startPolling(new AsyncFunction(code), frequency);
+textarea.value = code;
+freqInput.value = localStorage.getItem(FREQ_KEY) ?? 60;
+
+document.getElementById("save").addEventListener("click", async () => {
   const statusEl = document.getElementById("status");
+  const seconds = Math.max(1, parseInt(freqInput.value) || 60);
 
-  textarea.value = loadCode();
-  freqInput.value = localStorage.getItem(FREQ_KEY) ?? 60;
+  freqInput.value = seconds;
 
-  document.getElementById("save-btn").addEventListener("click", async () => {
-    const seconds = Math.max(1, parseInt(freqInput.value) || 60);
+  if (!textarea.value.trim()) {
+    textarea.value = DEFAULT_CODE;
+  }
 
-    freqInput.value = seconds;
+  statusEl.classList.remove("text-red-500")
+  localStorage.setItem(STORAGE_KEY, textarea.value);
+  localStorage.setItem(FREQ_KEY, seconds);
 
-    if (!textarea.value.trim()) {
-      textarea.value = DEFAULT_CODE;
-    }
-
-    localStorage.setItem(STORAGE_KEY, textarea.value);
-    localStorage.setItem(FREQ_KEY, seconds);
-    try {
-      statusEl.classList.remove("text-red-500")
-      statusEl.textContent = await updateTray();
-      startPolling();
-      setTimeout(() => {
-        statusEl.textContent = "";
-      }, 3000);
-    } catch (e) {
-      statusEl.textContent = e.message;
-      statusEl.classList.add("text-red-500")
-    }
-  });
+  try {
+    statusEl.textContent = await startPolling(new AsyncFunction(textarea.value), seconds);
+    setTimeout(() => statusEl.textContent = "", 3000);
+  } catch (e) {
+    statusEl.textContent = e.message;
+    statusEl.classList.add("text-red-500")
+  }
 });
