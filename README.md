@@ -8,11 +8,11 @@ Track your numbers in OS tray.
 
 ```
 # run watcher
-npx tauri dev
+npm run tauri dev
 
 # update icon
-npx tauri icon media/app-icon.png
+npm run tauri icon media/app-icon.png
 
 # build binaries
-npx tauri build
+npm run tauri build
 ```
