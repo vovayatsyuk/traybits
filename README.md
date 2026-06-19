@@ -11,5 +11,8 @@ Track your numbers in OS tray.
 npx tauri dev
 
 # update icon
-npm run tauri icon media/app-icon.png
+npx tauri icon media/app-icon.png
+
+# build binaries
+npx tauri build
 ```
