@@ -1,3 +1,4 @@
+use std::process::Command;
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{TrayIconBuilder, TrayIconId},
@@ -5,12 +6,17 @@ use tauri::{
 };
 
 struct TrayState(TrayIconId);
+struct UpdatedAtState(MenuItem<tauri::Wry>);
 
 #[tauri::command]
-fn set_tray_title(app: tauri::AppHandle, state: tauri::State<TrayState>, title: String) {
+fn set_tray_title(app: tauri::AppHandle, state: tauri::State<TrayState>, updated_at: tauri::State<UpdatedAtState>, title: String) {
     if let Some(tray) = app.tray_by_id(&state.0) {
         let _ = tray.set_title(Some(title));
     }
+    let time = Command::new("date").arg("+%H:%M").output()
+        .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
+        .unwrap_or_default();
+    let _ = updated_at.0.set_text(format!("Updated at {}", time));
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -24,10 +30,12 @@ pub fn run() {
             }
         })
         .setup(|app| {
+            let updated_at_i =
+                MenuItem::with_id(app, "updated_at", "Updated at --:--", false, None::<&str>)?;
             let preferences_i =
                 MenuItem::with_id(app, "preferences", "Preferences", true, None::<&str>)?;
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-            let menu = Menu::with_items(app, &[&preferences_i, &quit_i])?;
+            let menu = Menu::with_items(app, &[&updated_at_i, &preferences_i, &quit_i])?;
 
             let tray = TrayIconBuilder::new()
                 .menu(&menu)
@@ -48,6 +56,7 @@ pub fn run() {
                 .build(app)?;
 
             app.manage(TrayState(tray.id().clone()));
+            app.manage(UpdatedAtState(updated_at_i));
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![set_tray_title])
