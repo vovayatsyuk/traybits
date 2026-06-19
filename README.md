@@ -1,7 +1,15 @@
-# Tauri + Vanilla
+# Numbrays
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Javascript.
+Track your numbers in OS tray.
 
-## Recommended IDE Setup
+<img alt="Screenshot of the Numbrays app" src="./media/screenshot-light.webp" width="840">
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+## Developement
+
+```
+# run watcher
+npx tauri dev
+
+# update icon
+npm run tauri icon media/app-icon.png
+```
