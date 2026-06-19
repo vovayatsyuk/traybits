@@ -2,12 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <title>Numbrays</title>
     <link rel="stylesheet" href="styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Numbrays</title>
     <script type="module" src="/main.js" defer></script>
   </head>
-
   <body>
+    <div>
+      <label for="frequency">Frequency (seconds)</label>
+      <input id="frequency" type="number" min="1" value="60">
+    </div>
+    <div>
+      <label for="user-code">Code</label>
+      <textarea id="user-code"></textarea>
+    </div>
+    <div class="actions">
+      <button id="save-btn">Save &amp; Run</button>
+      <div id="status"></div>
+    </div>
   </body>
 </html>
