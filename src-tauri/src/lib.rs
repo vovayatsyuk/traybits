@@ -28,10 +28,11 @@ pub fn run() {
             #[cfg(target_os = "macos")]
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
-            let settings_i =
-                MenuItem::with_id(app, "settings", "Settings...", true, Some("Cmd+,"))?;
+            let refresh_i = MenuItem::with_id(app, "refresh", "Refresh now", true, None::<&str>)?;
+            let settings_i = MenuItem::with_id(app, "settings", "Settings...", true, Some("Cmd+,"))?;
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[
+                &refresh_i,
                 &settings_i,
                 &quit_i
             ])?;
@@ -40,6 +41,9 @@ pub fn run() {
                 .menu(&menu)
                 .show_menu_on_left_click(true)
                 .on_menu_event(|app, event| match event.id.as_ref() {
+                    "refresh" => {
+                        let _ = app.emit("refresh", ());
+                    }
                     "settings" => {
                         if let Some(window) = app.get_webview_window("main") {
                             let _ = window.show();
