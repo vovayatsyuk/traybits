@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Numbrays",
+  "productName": "Traybits",
   "version": "0.1.0",
-  "identifier": "com.vova.numbrays",
+  "identifier": "com.vovayatsyuk.traybits",
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
@@ -14,7 +14,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Numbrays",
+        "title": "Traybits",
         "width": 900,
         "height": 550,
         "visible": false

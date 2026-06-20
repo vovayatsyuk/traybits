@@ -1,8 +1,6 @@
 const { invoke } = window.__TAURI__.core;
 
 // const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-const STORAGE_KEY = "numbrays_user_code";
-const FREQ_KEY = "numbrays_frequency";
 const DEFAULT_CODE = `export default async () => {
   const res = await fetch("https://packagist.org/packages/psr/log/stats.json");
   const data = await res.json();
@@ -14,15 +12,15 @@ let intervalId = null;
 
 async function updateTray(fn) {
   const title = await fn();
-  if (typeof title !== "string") throw new Error("Script must return a string");
+  if (typeof title !== "string") throw new Error("Function must return a string");
   invoke("set_tray_title", { title });
   return title;
 }
 
-async function startPolling(fn, frequency) {
+async function startPolling(fn, timeout) {
   clearInterval(intervalId);
   const result = await updateTray(fn);
-  intervalId = setInterval(() => updateTray(fn), frequency * 1000);
+  intervalId = setInterval(() => updateTray(fn), timeout * 1000);
   return result;
 }
 
@@ -32,33 +30,36 @@ async function createFn(code) {
   const url = URL.createObjectURL(blob);
   const mod = await import(/* @vite-ignore */ url);
   URL.revokeObjectURL(url);
+  if (typeof mod.default !== "function") throw new Error("Script must export default function");
   return mod.default;
 }
 
-const code = localStorage.getItem(STORAGE_KEY) ?? DEFAULT_CODE;
-const frequency = localStorage.getItem(FREQ_KEY) ?? 60;
+const code = localStorage.getItem("traybits_code") ?? DEFAULT_CODE;
+const timeout = localStorage.getItem("traybits_timeout") ?? 60;
 
-startPolling(await createFn(code), frequency);
+(async () => {
+  startPolling(await createFn(code), timeout);
+})();
 
 const textarea = document.getElementById("code");
-const freqInput = document.getElementById("frequency");
+const timeoutInput = document.getElementById("timeout");
 
 textarea.value = code;
-freqInput.value = frequency;
+timeoutInput.value = timeout;
 
 document.getElementById("save").addEventListener("click", async () => {
   const statusEl = document.getElementById("status");
-  const seconds = Math.max(1, parseInt(freqInput.value) || 60);
+  const seconds = Math.max(1, parseInt(timeoutInput.value) || 60);
 
-  freqInput.value = seconds;
+  timeoutInput.value = seconds;
 
   if (!textarea.value.trim()) {
     textarea.value = DEFAULT_CODE;
   }
 
   statusEl.classList.remove("text-red-500")
-  localStorage.setItem(STORAGE_KEY, textarea.value);
-  localStorage.setItem(FREQ_KEY, seconds);
+  localStorage.setItem("traybits_code", textarea.value);
+  localStorage.setItem("traybits_timeout", seconds);
 
   try {
     statusEl.textContent = await startPolling(await createFn(textarea.value), seconds);

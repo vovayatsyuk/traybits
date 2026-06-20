@@ -1,8 +1,8 @@
-# Numbrays
+# Traybits
 
-Track your numbers in OS tray.
+Bits of information fetched with javascript in the system tray.
 
-<img alt="Screenshot of the Numbrays app" src="./media/screenshot-light.webp" width="840">
+<img alt="Screenshot of the Traybits app" src="./media/screenshot-light.webp" width="840">
 
 ## Developement
 
