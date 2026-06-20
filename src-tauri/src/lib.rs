@@ -1,6 +1,7 @@
 use std::{thread, time::Duration};
 use tauri::{
     Emitter, Manager, WindowEvent,
+    include_image,
     menu::{Menu, MenuItem},
     tray::{TrayIconBuilder, TrayIconId},
 };
@@ -57,8 +58,9 @@ pub fn run() {
                 })
                 .build(app)?;
 
-            #[cfg(target_os = "linux")]
-            let _ = tray.set_icon(Some(app.default_window_icon().unwrap().clone()));
+            #[cfg(target_os = "linux")] {
+                tray.set_icon(include_image!("icons/tray.png").into()).unwrap();
+            }
 
             app.manage(TrayState(tray.id().clone()));
 
