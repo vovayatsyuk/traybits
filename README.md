@@ -53,16 +53,19 @@ export default async () => {
 <img alt="Screenshot of the football score" src="./media/screenshot-football.webp" width="202">
 
 ```js
+const TEAM = 'GER';
 const FIFA_TO_ISO = {
-  NED: 'NL',
-  SWE: 'SE',
-  GER: 'DE',
-  FRA: 'FR',
-  ESP: 'ES',
-  ENG: 'GB',
-  USA: 'US',
-  BRA: 'BR',
-  ARG: 'AR',
+  // Group A  // Group B  // Group C  // Group D  // Group E  // Group F
+  MEX: 'MX',  CAN: 'CA',  BRA: 'BR',  USA: 'US',  GER: 'DE',  NED: 'NL',
+  RSA: 'ZA',  BIH: 'BA',  MAR: 'MA',  PAR: 'PY',  CUW: 'CW',  JPN: 'JP',
+  KOR: 'KR',  QAT: 'QA',  HTI: 'HT',  AUS: 'AU',  CIV: 'CI',  SWE: 'SE',
+  CZE: 'CZ',  SUI: 'CH',  SCO: 'GB',  TUR: 'TR',  ECU: 'EC',  TUN: 'TN',
+
+  // Group G  // Group H  // Group I  // Group J  // Group K  // Group L
+  BEL: 'BE',  ESP: 'ES',  FRA: 'FR',  ARG: 'AR',  POR: 'PT',  ENG: 'GB',
+  EGY: 'EG',  CPV: 'CV',  SEN: 'SN',  DZA: 'DZ',  COD: 'CD',  CRO: 'HR',
+  IRI: 'IR',  KSA: 'SA',  IRQ: 'IQ',  AUT: 'AT',  UZB: 'UZ',  GHA: 'GH',
+  NZL: 'NZ',  URU: 'UY',  NOR: 'NO',  JOR: 'JO',  COL: 'CO',  PAN: 'PA',
 };
 
 function flag(abbr) {
@@ -75,13 +78,30 @@ function flag(abbr) {
 export default async () => {
   const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard');
   const data = await res.json();
-  const game = data.events?.[0];
+  const game = data.events?.find(event => {
+    return event.competitions?.[0]?.competitors?.some(
+      team => team.team.abbreviation === TEAM
+    );
+  });
 
   if (!game) {
     return '⚽';
   }
 
   const [home, away] = game.competitions[0].competitors;
+
+  if (game.status?.type?.state === 'pre') {
+    return [
+      flag(home.team.abbreviation),
+      new Date(game.date).toLocaleString(undefined, {
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+      }),
+      flag(away.team.abbreviation),
+    ].join(' ');
+  }
 
   return [
     flag(home.team.abbreviation),
