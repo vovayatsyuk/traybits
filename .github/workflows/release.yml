@@ -21,8 +21,8 @@ jobs:
             args: ''
           # - platform: 'ubuntu-22.04-arm' # Only available in public repos.
           #   args: ''
-          - platform: 'windows-latest'
-            args: ''
+          # - platform: 'windows-latest'
+          #   args: ''
 
     runs-on: ${{ matrix.platform }}
     steps:
