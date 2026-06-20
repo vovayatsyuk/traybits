@@ -19,8 +19,8 @@ jobs:
             args: '--target x86_64-apple-darwin'
           - platform: 'ubuntu-22.04'
             args: ''
-          - platform: 'ubuntu-22.04-arm' # Only available in public repos.
-            args: ''
+          # - platform: 'ubuntu-22.04-arm' # Only available in public repos.
+          #   args: ''
           - platform: 'windows-latest'
             args: ''
 
@@ -51,7 +51,7 @@ jobs:
           workspaces: './src-tauri -> target'
 
       - name: install frontend dependencies
-        run: npm ci
+        run: npm install
 
       - uses: tauri-apps/tauri-action@v0
         env:
