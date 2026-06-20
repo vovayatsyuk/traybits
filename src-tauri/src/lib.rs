@@ -1,7 +1,6 @@
 use std::{thread, time::Duration};
 use tauri::{
     Emitter, Manager, WindowEvent,
-    include_image,
     menu::{Menu, MenuItem},
     tray::{TrayIconBuilder, TrayIconId},
 };
