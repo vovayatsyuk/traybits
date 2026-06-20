@@ -58,7 +58,7 @@ pub fn run() {
                 .build(app)?;
 
             #[cfg(target_os = "linux")] {
-                tray.set_icon(include_image!("icons/tray.png").into()).unwrap();
+                tray.set_icon(tauri::include_image!("icons/tray.png").into()).unwrap();
             }
 
             app.manage(TrayState(tray.id().clone()));
