@@ -1,7 +1,8 @@
+use std::{thread, time::Duration};
 use tauri::{
+    Emitter, Manager, WindowEvent,
     menu::{Menu, MenuItem},
     tray::{TrayIconBuilder, TrayIconId},
-    Manager, WindowEvent,
 };
 
 struct TrayState(TrayIconId);
@@ -56,6 +57,15 @@ pub fn run() {
             let _ = tray.set_icon(Some(app.default_window_icon().unwrap().clone()));
 
             app.manage(TrayState(tray.id().clone()));
+
+            let app = app.handle().clone();
+            thread::spawn(move || {
+                loop {
+                    let _ = app.emit("tick", ());
+                    std::thread::sleep(Duration::from_secs(1));
+                }
+            });
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![set_tray_title])
