@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="h-full bg-gray-100">
+<html lang="en" class="h-full bg-gray-100 dark:bg-zinc-900 dark:text-zinc-200">
   <head>
     <meta charset="UTF-8" />
     <title>Traybits</title>
@@ -8,19 +8,19 @@
     <script type="module" src="/main.js" defer></script>
   </head>
   <body class="flex flex-col h-full">
-    <div class="m-4 bg-white rounded-lg shadow flex flex-col divide-y divide-gray-200 h-full">
+    <div class="m-4 bg-white rounded-lg shadow flex flex-col divide-y divide-gray-200 h-full dark:bg-zinc-900 dark:divide-zinc-800 dark:border dark:border-zinc-800">
       <div class="flex items-center px-4 py-4">
-        <label for="timeout" class="text-sm text-zinc-700">Seconds to wait between updates</label>
-        <input class="ml-auto rounded-md" id="timeout" type="number" min="1" value="60">
+        <label for="timeout" class="text-sm text-zinc-700 dark:text-zinc-100">Seconds to wait between updates</label>
+        <input class="ml-auto rounded-md dark:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-200" id="timeout" type="number" min="1" value="60">
       </div>
       <div class="flex flex-col px-4 py-4 h-full">
-        <label for="code" class="text-sm text-zinc-700">Code</label>
-        <textarea id="code" spellcheck="false" class="mt-1 rounded-md break-all h-full font-mono"></textarea>
+        <label for="code" class="text-sm text-zinc-700 dark:text-zinc-100">Code</label>
+        <textarea id="code" spellcheck="false" class="mt-1 rounded-md break-all h-full font-mono dark:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-200"></textarea>
       </div>
     </div>
     <div class="m-4 mt-auto flex gap-4 items-center justify-end px-4 py-4">
       <div id="status" class="text-xs"></div>
-      <button id="save" class="rounded-md bg-gray-800 text-white text-sm px-5 py-2.5">Save &amp; Run</button>
+      <button id="save" class="rounded-md bg-gray-800 text-white text-sm px-5 py-2.5 dark:text-black dark:bg-zinc-200">Save &amp; Run</button>
     </div>
   </body>
 </html>
