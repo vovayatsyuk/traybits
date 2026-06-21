@@ -1,6 +1,6 @@
 [package]
 name = "Traybits"
-version = "0.1.0"
+version = "0.1.1"
 description = "Bits of information in the system tray"
 authors = ["vova.yatsyuk@gmail.com"]
 edition = "2021"
