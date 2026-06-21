@@ -48,6 +48,33 @@ export default async () => {
 }
 ```
 
+### Pomodoro timer
+
+<img alt="Screenshot of the Pomodoro timer" src="./media/screenshot-pomodoro.gif" width="273">
+
+```
+const pomodoro = (() => {
+  const START = Date.now();
+  return () => {
+    const elapsed = Math.floor((Date.now() - START) / 1000);
+    const remaining = Math.max(0, 25 * 60 - elapsed);
+
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
+
+    if (!minutes && !seconds) {
+      return '☕️';
+    }
+
+    return `🍅 ${minutes}:${String(seconds).padStart(2, '0')}`;
+  }
+})();
+
+export default async () => {
+  return pomodoro();
+}
+```
+
 ### Football match score
 
 <img alt="Screenshot of the football score" src="./media/screenshot-football.webp" width="202">
