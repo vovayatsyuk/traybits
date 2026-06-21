@@ -1,7 +1,7 @@
 use std::{thread, time::Duration};
 use tauri::{
     Emitter, Manager, WindowEvent,
-    menu::{Menu, MenuItem},
+    menu::{MenuBuilder, MenuItemBuilder},
     tray::{TrayIconBuilder, TrayIconId},
 };
 
@@ -28,14 +28,20 @@ pub fn run() {
             #[cfg(target_os = "macos")]
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
-            let refresh_i = MenuItem::with_id(app, "refresh", "Refresh now", true, None::<&str>)?;
-            let settings_i = MenuItem::with_id(app, "settings", "Settings...", true, Some("Cmd+,"))?;
-            let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-            let menu = Menu::with_items(app, &[
-                &refresh_i,
-                &settings_i,
-                &quit_i
-            ])?;
+            let menu = MenuBuilder::new(app)
+                .item(&MenuItemBuilder::with_id("refresh", "Refresh now").build(app)?)
+                .item(&MenuItemBuilder::with_id("restart", "Start over").build(app)?)
+                .separator()
+                .item(
+                    &MenuItemBuilder::with_id("settings", "Settings...")
+                        .accelerator("Cmd+,")
+                        .build(app)?,
+                )
+                .separator()
+                .item(
+                    &MenuItemBuilder::with_id("quit", "Quit").build(app)?,
+                )
+                .build()?;
 
             let tray = TrayIconBuilder::new()
                 .menu(&menu)
@@ -43,6 +49,9 @@ pub fn run() {
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "refresh" => {
                         let _ = app.emit("refresh", ());
+                    }
+                    "restart" => {
+                        let _ = app.emit("restart", ());
                     }
                     "settings" => {
                         if let Some(window) = app.get_webview_window("main") {

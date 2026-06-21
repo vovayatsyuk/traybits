@@ -53,7 +53,8 @@ document.getElementById('save').addEventListener('click', async () => {
   localStorage.setItem('traybits_timeout', seconds);
 
   try {
-    fn = await createFn(codeEl.value);
+    fn = false;
+    code = codeEl.value;
     resting = false;
     timeout = seconds;
     statusEl.textContent = await updateTray();
@@ -83,6 +84,16 @@ listen('tick', async event => {
 
 listen('refresh', async event => {
   try {
+    working = true;
+    await updateTray();
+  } finally {
+    working = false;
+  }
+});
+
+listen('restart', async event => {
+  try {
+    fn = false;
     working = true;
     await updateTray();
   } finally {
