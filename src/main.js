@@ -54,6 +54,7 @@ document.getElementById('save').addEventListener('click', async () => {
 
   try {
     fn = await createFn(codeEl.value);
+    resting = false;
     timeout = seconds;
     statusEl.textContent = await updateTray();
   } catch (e) {
