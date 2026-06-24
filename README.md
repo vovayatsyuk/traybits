@@ -7,19 +7,32 @@ Bits of information fetched with javascript in the system tray.
     <img alt="Screenshot of the Traybits app" src="./media/screenshot-light.webp" width="876">
 </picture>
 
+## Installation
 
-## Developement
+Download the latest release from [Releases](releases) and run the executable.
+The app is not signed, so you may need to allow it in your system settings.
 
-```
-# run watcher
-npm run tauri dev
+### MacOS
 
-# update icon
-npm run tauri icon media/app-icon.png
+ 1. After you copied the app to the Applications folder, run the following command:
 
-# build binaries
-npm run tauri build
-```
+    ```bash
+    xattr -c "/Applications/Traybits.app"
+    ```
+
+ 2. Now, find "Traybits" in the Applications folder, right click on the App and
+    choose "Open" in the context menu.
+
+### Ubuntu
+
+ 1. Double click the downloaded `deb` file and install it.
+ 2. Run the app.
+
+### Windows
+
+I don't have a Windows machine to test the app. If you are on Windows and
+want to use the app, please try to [build it](#developement) and let me know if
+it works.
 
 ## Bits examples
 
@@ -146,4 +159,17 @@ export default async () => {
   const newYear = new Date(now.getFullYear() + 1, 0, 1);
   return '' + Math.ceil((newYear - now) / 86400000);
 }
+```
+
+## Developement
+
+```
+# run watcher
+npm run tauri dev
+
+# update icon
+npm run tauri icon media/app-icon.png
+
+# build binaries
+npm run tauri build
 ```
