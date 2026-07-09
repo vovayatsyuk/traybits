@@ -8,16 +8,35 @@
     <script type="module" src="/main.js" defer></script>
   </head>
   <body class="flex flex-col h-full">
-    <div class="m-4 bg-white rounded-lg shadow flex flex-col divide-y divide-gray-200 h-full dark:bg-zinc-900 dark:divide-zinc-800 dark:border dark:border-zinc-800">
-      <div class="flex items-center px-4 py-4">
-        <label for="timeout" class="text-sm text-zinc-700 dark:text-zinc-100">Seconds to wait between refreshes</label>
-        <input class="ml-auto rounded-md dark:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-200" id="timeout" type="number" min="1" value="60">
-      </div>
-      <div class="flex flex-col px-4 py-4 h-full">
-        <label for="code" class="text-sm text-zinc-700 dark:text-zinc-100">Code</label>
-        <textarea id="code" spellcheck="false" class="mt-1 rounded-md break-all h-full font-mono dark:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-200"></textarea>
+    <div class="m-4 bg-white rounded-lg shadow flex flex-1 min-h-0 divide-x divide-gray-200 dark:bg-zinc-900 dark:divide-zinc-800 dark:border dark:border-zinc-800">
+      <aside class="w-44 shrink-0 flex flex-col gap-1 p-2 overflow-y-auto">
+        <button id="add" class="rounded-md px-3 py-2 text-sm text-left text-zinc-500 hover:bg-gray-100 dark:text-zinc-400 dark:hover:bg-zinc-800">+ New snippet</button>
+        <nav id="tabs" class="flex flex-col gap-1"></nav>
+      </aside>
+      <div id="panels" class="flex-1 min-w-0 flex"></div>
+      <div id="empty" class="hidden flex-1 items-center justify-center text-sm text-zinc-400">
+        No snippets — click “+ New snippet”
       </div>
     </div>
+    <template id="panel-template">
+      <section class="hidden flex-1 flex-col divide-y divide-gray-200 min-w-0 dark:divide-zinc-800">
+        <div class="flex items-center gap-4 px-4 py-4">
+          <label for="name" class="text-sm text-zinc-700 dark:text-zinc-100">Title</label>
+          <input id="name" type="text" placeholder="Snippet name" class="name rounded-md flex-1 dark:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-200">
+          <label class="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-100">
+            <input type="checkbox" class="enabled rounded dark:bg-zinc-800 dark:border-zinc-700"> Enabled
+          </label>
+        </div>
+        <div class="flex items-center px-4 py-4">
+          <label for="timeout" class="text-sm text-zinc-700 dark:text-zinc-100">Seconds to wait between refreshes</label>
+          <input id="timeout" type="number" min="1" value="60" class="timeout ml-auto w-24 rounded-md dark:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-200">
+        </div>
+        <div class="flex flex-col px-4 py-4 flex-1 min-h-0">
+          <label for="code" class="text-sm text-zinc-700 dark:text-zinc-100">Code</label>
+          <textarea id="code" spellcheck="false" class="code mt-1 rounded-md break-all flex-1 font-mono dark:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-200"></textarea>
+        </div>
+      </section>
+    </template>
     <div class="m-4 mt-auto flex gap-4 items-center justify-end px-4 py-4">
       <div id="status" class="text-xs"></div>
       <button id="save" class="rounded-md bg-gray-800 text-white text-sm px-5 py-2.5 dark:text-black dark:bg-zinc-200">Save &amp; Run</button>
