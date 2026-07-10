@@ -1,6 +1,6 @@
 # Traybits
 
-App to display various usefull information in the system tray.
+App to display various information in the system tray using javascript snippets.
 
 <picture>
     <!-- <source media="(prefers-color-scheme: dark)" srcset="./media/screenshot-dark.webp" width="873"> -->
@@ -34,7 +34,7 @@ I don't have a Windows machine to test the app. If you are on Windows and
 want to use the app, please try to [build it](#developement) and let me know if
 it works.
 
-## Bits examples
+## Snippets examples
 
 ### Packagist download count
 
@@ -66,98 +66,20 @@ export default async () => {
 <img alt="Screenshot of the Pomodoro timer" src="./media/screenshot-pomodoro.gif" width="273">
 
 ```
-const pomodoro = (() => {
-  const START = Date.now();
-  return () => {
-    const elapsed = Math.floor((Date.now() - START) / 1000);
-    const remaining = Math.max(0, 25 * 60 - elapsed);
-
-    const minutes = Math.floor(remaining / 60);
-    const seconds = remaining % 60;
-
-    if (!minutes && !seconds) {
-      return '☕️';
-    }
-
-    return `🍅 ${minutes}:${String(seconds).padStart(2, '0')}`;
-  }
-})();
+const START = Date.now();
 
 export default async () => {
-  return pomodoro();
-}
-```
+  const elapsed = Math.floor((Date.now() - START) / 1000);
+  const remaining = Math.max(0, 25 * 60 - elapsed);
 
-### Football match score
+  const minutes = Math.floor(remaining / 60);
+  const seconds = remaining % 60;
 
-<img alt="Screenshot of the football score" src="./media/screenshot-football.webp" width="202">
-
-```js
-const TEAM = 'GER';
-const FIFA_TO_ISO = {
-  // Group A  // Group B  // Group C  // Group D  // Group E  // Group F
-  MEX: 'MX',  CAN: 'CA',  BRA: 'BR',  USA: 'US',  GER: 'DE',  NED: 'NL',
-  RSA: 'ZA',  BIH: 'BA',  MAR: 'MA',  PAR: 'PY',  CUW: 'CW',  JPN: 'JP',
-  KOR: 'KR',  QAT: 'QA',  HTI: 'HT',  AUS: 'AU',  CIV: 'CI',  SWE: 'SE',
-  CZE: 'CZ',  SUI: 'CH',  SCO: 'GB',  TUR: 'TR',  ECU: 'EC',  TUN: 'TN',
-
-  // Group G  // Group H  // Group I  // Group J  // Group K  // Group L
-  BEL: 'BE',  ESP: 'ES',  FRA: 'FR',  ARG: 'AR',  POR: 'PT',  ENG: 'GB',
-  EGY: 'EG',  CPV: 'CV',  SEN: 'SN',  DZA: 'DZ',  COD: 'CD',  CRO: 'HR',
-  IRI: 'IR',  KSA: 'SA',  IRQ: 'IQ',  AUT: 'AT',  UZB: 'UZ',  GHA: 'GH',
-  NZL: 'NZ',  URU: 'UY',  NOR: 'NO',  JOR: 'JO',  COL: 'CO',  PAN: 'PA',
-};
-
-function flag(abbr) {
-  if (!FIFA_TO_ISO[abbr]) {
-    return abbr;
-  }
-  return FIFA_TO_ISO[abbr].replace(/./g, c => String.fromCodePoint(127397 + c.charCodeAt()));
-}
-
-export default async () => {
-  const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard');
-  const data = await res.json();
-  const game = data.events?.find(event => {
-    return event.competitions?.[0]?.competitors?.some(
-      team => team.team.abbreviation === TEAM
-    );
-  });
-
-  if (!game) {
-    return '⚽';
+  if (!minutes && !seconds) {
+    return '☕️';
   }
 
-  const [home, away] = game.competitions[0].competitors;
-
-  if (game.status?.type?.state === 'pre') {
-    return [
-      flag(home.team.abbreviation),
-      new Date(game.date).toLocaleString(undefined, {
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-      }),
-      flag(away.team.abbreviation),
-    ].join(' ');
-  }
-
-  return [
-    flag(home.team.abbreviation),
-    `${home.score}:${away.score}`,
-    flag(away.team.abbreviation),
-  ].join(' ');
-}
-```
-
-### Days till New Year
-
-```js
-export default async () => {
-  const now = new Date();
-  const newYear = new Date(now.getFullYear() + 1, 0, 1);
-  return '' + Math.ceil((newYear - now) / 86400000);
+  return `🍅 ${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 ```
 
