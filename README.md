@@ -4,7 +4,7 @@ App to display various usefull information in the system tray.
 
 <picture>
     <!-- <source media="(prefers-color-scheme: dark)" srcset="./media/screenshot-dark.webp" width="873"> -->
-    <img alt="Screenshot of the Traybits app" src="./media/screenshot-light.webp" width="1188">
+    <img alt="Screenshot of the Traybits app" src="./media/screenshot-light.webp" width="1180">
 </picture>
 
 ## Installation
