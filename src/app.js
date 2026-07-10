@@ -97,6 +97,22 @@ export default function register(Alpine) {
       isEnabled().then(v => { this.autostart = v; });
     },
 
+    resetDraft() {
+      for (let i = this.draft.length - 1; i >= 0; i--) {
+        const saved = this.snippets.find(s => s.id === this.draft[i].id);
+        if (saved) {
+          Object.assign(this.draft[i], saved);
+        } else {
+          this.draft.splice(i, 1);
+        }
+      }
+
+      if (this.activeId && !this.draft.some(s => s.id === this.activeId)) {
+        this.openSettings();
+      }
+      this.saveMessage = null;
+    },
+
     async setAutostart(value) {
       try {
         value ? await enable() : await disable();

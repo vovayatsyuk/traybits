@@ -18,6 +18,8 @@ listen('tick', async () => {
   }
 });
 
+listen('close', () => app.resetDraft());
+
 listen('refresh', async () => {
   await Promise.all(app.enabledRunners.map(Runner.run));
   app.syncTray();

@@ -25,6 +25,10 @@ pub fn run() {
         .on_window_event(|window, event| {
             if let WindowEvent::CloseRequested { api, .. } = event {
                 api.prevent_close();
+
+                let app = window.app_handle();
+                let _ = app.emit("close", ());
+
                 let _ = window.hide();
             }
         })
