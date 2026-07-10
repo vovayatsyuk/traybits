@@ -54,7 +54,7 @@
           </template>
         </nav>
       </aside>
-      <div class="flex-1 min-w-0 flex px-8 py-6 bg-gray-50">
+      <div class="flex-1 min-w-0 flex px-8 py-6 bg-gray-50 overflow-y-auto">
         <section x-show="$store.app.settingsOpen"
           @change="$store.app.saveSettings()"
           class="flex flex-1 flex-col gap-6 max-w-lg mx-auto rounded-lg bg-white p-6 ring ring-gray-200">
@@ -80,7 +80,9 @@
           </div>
         </section>
         <template x-for="snippet in $store.app.draft" :key="snippet.id">
-          <section x-show="$store.app.isSnippetActive(snippet.id)" x-id="['title', 'enabled', 'timeout', 'code']" class="flex flex-1 flex-col gap-6 max-w-2xl mx-auto rounded-lg bg-white p-6 ring ring-gray-200">
+          <section x-show="$store.app.isSnippetActive(snippet.id)"
+            x-id="['title', 'enabled', 'timeout', 'code']"
+            class="flex flex-col gap-6 w-full max-w-2xl mx-auto min-h-full self-start rounded-lg bg-white p-6 ring ring-gray-200">
             <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center gap-4">
                 <label :for="$id('title')" class="text-sm text-zinc-700">Title</label>
@@ -118,7 +120,7 @@
                   </div>
                 </div>
               </div>
-              <textarea :id="$id('code')" spellcheck="false" x-model="snippet.code" class="mt-1 rounded-md break-all flex-1 font-mono"></textarea>
+              <textarea :id="$id('code')" spellcheck="false" x-model="snippet.code" class="mt-1 min-h-60 rounded-md break-all flex-1 font-mono"></textarea>
             </div>
           </section>
         </template>
