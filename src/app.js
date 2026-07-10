@@ -149,9 +149,24 @@ export default function register(Alpine) {
       localStorage.setItem('traybits_snippets', snippetsJson);
       this.snippets = JSON.parse(snippetsJson);
 
-      this.runners = new Map(this.snippets.map(s => [s.id, Runner.create(s)]));
+      // Reuse runners whose code and enabled status are unchanged (keeps their
+      // fn + last result + resting cadence); recreate added snippets and those
+      // whose code or status changed. Deleted ones drop out since we map over
+      // the new list.
+      const prev = this.runners;
+      const created = [];
+      this.runners = new Map(this.snippets.map(s => {
+        const runner = prev.get(s.id);
+        if (runner && runner.snippet.code === s.code && runner.snippet.enabled === s.enabled) {
+          runner.snippet = s; // adopt name/timeout edits
+          return [s.id, runner];
+        }
+        const fresh = Runner.create(s);
+        created.push(fresh);
+        return [s.id, fresh];
+      }));
 
-      await Promise.allSettled(this.enabledRunners.map(Runner.run));
+      await Promise.allSettled(created.filter(r => r.snippet.enabled).map(Runner.run));
       this.syncTray();
 
       const failed = [...this.runners.values()].find(r => r.lastError);
