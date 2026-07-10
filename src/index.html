@@ -90,10 +90,10 @@
                 <input :id="$id('enabled')" type="checkbox" aria-label="Enabled" x-model="snippet.enabled" class="absolute inset-0 size-full appearance-none opacity-0 focus:outline-hidden">
               </div>
             </div>
-            <div class="grid grid-cols-2 gap-8">
+            <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center gap-2">
                 <label :for="$id('title')" class="text-sm text-zinc-700 min-w-20">Title</label>
-                <input :id="$id('title')" type="text" placeholder="Snippet name" x-model="snippet.name" class="rounded-md flex-1">
+                <input :id="$id('title')" type="text" placeholder="Snippet name" x-model="snippet.name" class="rounded-md w-full">
               </div>
               <div class="flex items-center gap-2">
                 <label :for="$id('timeout')" class="text-sm text-zinc-700">Update every</label>
