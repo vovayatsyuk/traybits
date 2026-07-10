@@ -27,7 +27,8 @@
         <nav x-sort.ghost="$store.app.reorderSnippet($item, $position)"
           x-sort:config="{
             forceFallback: true,
-            direction: 'vertical'
+            direction: 'vertical',
+            fallbackTolerance: 2
           }" class="flex flex-col gap-1 flex-1 min-h-0 overflow-y-auto">
           <template x-for="snippet in $store.app.draft" :key="snippet.id">
             <div x-sort:item="snippet.id" @click="$store.app.selectSnippet(snippet.id)"
