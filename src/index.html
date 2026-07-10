@@ -49,8 +49,10 @@
           </template>
         </nav>
       </aside>
-      <div class="flex-1 min-w-0 flex px-8 py-6">
-        <section x-show="$store.app.settingsOpen" @change="$store.app.saveSettings()" class="flex flex-1 flex-col min-w-0 max-w-md mx-auto">
+      <div class="flex-1 min-w-0 flex px-8 py-6 bg-gray-50">
+        <section x-show="$store.app.settingsOpen"
+          @change="$store.app.saveSettings()"
+          class="flex flex-1 flex-col max-w-2xl mx-auto rounded-lg bg-white p-6 ring ring-gray-200">
           <div class="flex items-center gap-4">
             <span class="cursor-default text-sm text-zinc-700">Separator</span>
             <div class="ml-auto flex gap-1 bg-gray-100 p-1 rounded-md">
@@ -64,13 +66,13 @@
           </div>
         </section>
         <template x-for="snippet in $store.app.draft" :key="snippet.id">
-          <section x-show="$store.app.isSnippetActive(snippet.id)" x-id="['title', 'enabled', 'timeout', 'code']" class="flex flex-1 flex-col gap-6 min-w-0">
+          <section x-show="$store.app.isSnippetActive(snippet.id)" x-id="['title', 'enabled', 'timeout', 'code']" class="flex flex-1 flex-col gap-6 max-w-2xl mx-auto rounded-lg bg-white p-6 ring ring-gray-200">
             <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center gap-4">
                 <label :for="$id('title')" class="text-sm text-zinc-700">Title</label>
                 <input :id="$id('title')" type="text" placeholder="Snippet name" x-model="snippet.name" class="rounded-md flex-1">
               </div>
-              <div class="flex items-center gap-4">
+              <div class="flex items-center gap-4 justify-end">
                 <label :for="$id('enabled')" class="flex items-center gap-2 text-sm text-zinc-700">
                   Enabled<input :id="$id('enabled')" type="checkbox" x-model="snippet.enabled" class="rounded">
                 </label>
@@ -78,8 +80,9 @@
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center gap-4">
-                <label :for="$id('timeout')" class="text-sm text-zinc-700">Seconds to wait between executions</label>
+                <label :for="$id('timeout')" class="text-sm text-zinc-700">Update every</label>
                 <input :id="$id('timeout')" type="number" min="1" x-model.number="snippet.timeout" class="ml-auto w-24 rounded-md">
+                <label :for="$id('timeout')" class="text-sm text-zinc-700">seconds</label>
               </div>
             </div>
             <div class="flex flex-col flex-1 min-h-0">
