@@ -34,18 +34,25 @@ function loadSnippets() {
   return list;
 }
 
+function loadSettings() {
+  return { separator: '\u2000·\u2000', ...JSON.parse(localStorage.getItem('traybits_settings') ?? '{}') };
+}
+
 let snippets = loadSnippets(),
     draft = structuredClone(snippets),
     activeId = draft[0]?.id,
     runners = createRunners(snippets),
-    panels = new Map();
+    panels = new Map(),
+    settings = loadSettings(),
+    settingsDraft = structuredClone(settings),
+    settingsOpen = true;
 
 function createRunners(snippets) {
   return new Map(snippets.map(s => [s.id, Runner.create(s)]));
 }
 
 function syncTray() {
-  invoke('set_tray_title', { title: Runner.render(runners) });
+  invoke('set_tray_title', { title: Runner.render(runners, settings.separator) });
 }
 
 function createPanel(snippet) {
@@ -105,7 +112,7 @@ function renderTabs() {
   tabsEl.replaceChildren(...draft.map(s => {
     const tab = document.createElement('div');
     tab.className = 'group cursor-default rounded-md px-3 py-2 text-sm flex items-center gap-2'
-      + (s.id === activeId ? ' bg-gray-100 dark:bg-zinc-800' : ' hover:bg-gray-50 dark:hover:bg-zinc-800/50')
+      + (s.id === activeId && !settingsOpen ? ' bg-gray-100 dark:bg-zinc-800' : ' hover:bg-gray-50 dark:hover:bg-zinc-800/50')
       + (s.enabled ? '' : ' opacity-50');
 
     const label = document.createElement('span');
@@ -154,6 +161,7 @@ function renderTabs() {
 
     tab.addEventListener('click', () => {
       activeId = s.id;
+      settingsOpen = false;
       renderTabs();
       renderPanels();
     });
@@ -162,19 +170,26 @@ function renderTabs() {
 }
 
 function renderPanels() {
-  panelsEl.classList.toggle('hidden', !draft.length);
-  emptyEl.classList.toggle('hidden', !!draft.length);
-  emptyEl.classList.toggle('flex', !draft.length);
+  const hasContent = draft.length || settingsOpen;
+  panelsEl.classList.toggle('hidden', !hasContent);
+  emptyEl.classList.toggle('hidden', !!hasContent);
+  emptyEl.classList.toggle('flex', !hasContent);
+
+  settingsPanelEl.classList.toggle('flex', settingsOpen);
+  settingsPanelEl.classList.toggle('hidden', !settingsOpen);
+  settingsBtn.classList.toggle('bg-gray-100', settingsOpen);
+  settingsBtn.classList.toggle('dark:bg-zinc-800', settingsOpen);
 
   for (const [id, panel] of panels) {
-    panel.root.classList.toggle('flex', id === activeId);
-    panel.root.classList.toggle('hidden', id !== activeId);
+    const active = id === activeId && !settingsOpen;
+    panel.root.classList.toggle('flex', active);
+    panel.root.classList.toggle('hidden', !active);
   }
   renderStatus();
 }
 
 function renderStatus() {
-  const runner = runners.get(activeId);
+  const runner = settingsOpen ? null : runners.get(activeId);
   statusEl.classList.toggle('text-red-500', !!runner?.lastError);
   statusEl.textContent = runner ? (runner.lastError ?? runner.lastResult ?? '') : '';
 }
@@ -190,6 +205,22 @@ document.getElementById('add').addEventListener('click', () => {
   draft.push(snippet);
   createPanel(snippet);
   activeId = snippet.id;
+  settingsOpen = false;
+  renderTabs();
+  renderPanels();
+});
+
+const settingsBtn = document.getElementById('settings');
+const settingsPanelEl = document.getElementById('settings-panel');
+const separatorEl = document.getElementById('separator');
+
+for (const input of separatorEl.querySelectorAll('input')) {
+  input.checked = input.value === settingsDraft.separator;
+  input.addEventListener('change', () => settingsDraft.separator = input.value);
+}
+
+settingsBtn.addEventListener('click', () => {
+  settingsOpen = true;
   renderTabs();
   renderPanels();
 });
@@ -212,6 +243,10 @@ document.getElementById('save').addEventListener('click', async () => {
 
   snippets = structuredClone(draft);
   localStorage.setItem('traybits_snippets', JSON.stringify(snippets));
+
+  settings = structuredClone(settingsDraft);
+  localStorage.setItem('traybits_settings', JSON.stringify(settings));
+
   runners = createRunners(snippets);
 
   await Promise.allSettled(enabledRunners().map(Runner.run));
@@ -222,7 +257,7 @@ document.getElementById('save').addEventListener('click', async () => {
   statusEl.classList.toggle('text-red-500', !!failed);
   statusEl.textContent = failed
     ? `${failed.snippet.name}: ${failed.lastError}`
-    : Runner.render(runners);
+    : Runner.render(runners, settings.separator);
 });
 
 function enabledRunners() {

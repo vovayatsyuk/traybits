@@ -52,10 +52,10 @@ export async function runIfReady(runner) {
   return run(runner);
 }
 
-export function render(runners) {
+export function render(runners, separator) {
   return [...runners.values()]
     .filter(r => r.snippet.enabled)
     .map(r => r.lastError ? '⚠' : r.lastResult)
     .filter(Boolean)
-    .join(' | ');
+    .join(separator);
 }
