@@ -3,9 +3,7 @@ import { listen } from '@tauri-apps/api/event';
 import * as Runner from './runner.js';
 
 const DEFAULT_CODE = `export default async () => {
-  const res = await fetch("https://packagist.org/packages/psr/log/stats.json");
-  const data = await res.json();
-  return new Intl.NumberFormat().format(data.downloads.total)
+  return 'Traybits'
 }
 `;
 
