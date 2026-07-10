@@ -18,6 +18,7 @@
     "@alpinejs/sort": "^3.15.12",
     "@tailwindcss/vite": "^4.3.1",
     "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-autostart": "^2.5.1",
     "alpinejs": "^3.15.12",
     "tailwindcss": "^4.3.1"
   }

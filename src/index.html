@@ -56,7 +56,16 @@
       <div class="flex-1 min-w-0 flex px-8 py-6 bg-gray-50">
         <section x-show="$store.app.settingsOpen"
           @change="$store.app.saveSettings()"
-          class="flex flex-1 flex-col max-w-2xl mx-auto rounded-lg bg-white p-6 ring ring-gray-200">
+          class="flex flex-1 flex-col gap-6 max-w-lg mx-auto rounded-lg bg-white p-6 ring ring-gray-200">
+          <div class="flex items-center gap-4">
+            <span class="cursor-default text-sm text-zinc-700">Start at login</span>
+            <div class="group relative ml-auto inline-flex w-11 shrink-0 rounded-full bg-gray-200 p-0.5 inset-ring inset-ring-gray-900/5 outline-offset-2 outline-blue-600 transition-colors duration-200 ease-in-out has-checked:bg-blue-600 has-focus-visible:outline-2">
+              <span class="size-5 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-5"></span>
+              <input type="checkbox" aria-label="Start at login" class="absolute inset-0 size-full appearance-none opacity-0 focus:outline-hidden"
+                     :checked="$store.app.autostart"
+                     @change="$store.app.setAutostart($event.target.checked)">
+            </div>
+          </div>
           <div class="flex items-center gap-4">
             <span class="cursor-default text-sm text-zinc-700">Separator</span>
             <div class="ml-auto flex gap-1 bg-gray-100 p-1 rounded-md">

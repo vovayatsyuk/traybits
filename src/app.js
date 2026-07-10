@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
+import { enable, disable, isEnabled } from '@tauri-apps/plugin-autostart';
 import * as Runner from './runner.js';
 
 const DEFAULT_CODE = `export default async () => {
@@ -38,6 +39,7 @@ export default function register(Alpine) {
     settings: {},
     settingsOpen: true,
     saveMessage: null,
+    autostart: false,
 
     init() {
       const snippets = loadSnippets();
@@ -45,6 +47,16 @@ export default function register(Alpine) {
       this.draft = structuredClone(snippets);
       this.settings = loadSettings();
       this.runners = new Map(snippets.map(s => [s.id, Runner.create(s)]));
+      isEnabled().then(v => { this.autostart = v; });
+    },
+
+    async setAutostart(value) {
+      try {
+        value ? await enable() : await disable();
+        this.autostart = value;
+      } catch (e) {
+        this.autostart = await isEnabled(); // revert to real state on failure
+      }
     },
 
     get enabledRunners() {
