@@ -1,10 +1,10 @@
 # Traybits
 
-Bits of information fetched with javascript in the system tray.
+App to display various usefull information in the system tray.
 
 <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./media/screenshot-dark.webp" width="873">
-    <img alt="Screenshot of the Traybits app" src="./media/screenshot-light.webp" width="876">
+    <!-- <source media="(prefers-color-scheme: dark)" srcset="./media/screenshot-dark.webp" width="873"> -->
+    <img alt="Screenshot of the Traybits app" src="./media/screenshot-light.webp" width="1188">
 </picture>
 
 ## Installation
