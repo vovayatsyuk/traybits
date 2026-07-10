@@ -15,8 +15,8 @@
 @layer components {
   .chip {
     @apply inline-flex min-w-8 items-center justify-center rounded-md px-2.5 py-0.5 text-sm
-      text-zinc-500 hover:bg-white dark:text-zinc-400 dark:hover:bg-zinc-800/50
-      has-checked:shadow-xs has-checked:bg-white has-checked:text-zinc-900 dark:has-checked:bg-zinc-800 dark:has-checked:text-zinc-100
+      text-zinc-700 hover:bg-white
+      has-checked:shadow-xs has-checked:bg-white has-checked:text-zinc-900
       has-focus-visible:ring-2 has-focus-visible:ring-zinc-400;
   }
 }
