@@ -65,7 +65,7 @@ export default async () => {
 
 <img alt="Screenshot of the Pomodoro timer" src="./media/screenshot-pomodoro.gif" width="273">
 
-```
+```js
 const START = Date.now();
 
 export default async () => {
@@ -85,7 +85,7 @@ export default async () => {
 
 ## Developement
 
-```
+```bash
 # run watcher
 npm run tauri dev
 
