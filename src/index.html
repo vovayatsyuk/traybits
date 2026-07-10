@@ -102,7 +102,22 @@
               </div>
             </div>
             <div class="flex flex-col flex-1 min-h-0">
-              <label :for="$id('code')" class="text-sm text-zinc-700">Code</label>
+              <div class="flex items-center justify-between">
+                <label :for="$id('code')" class="text-sm text-zinc-700">Code</label>
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                  <button type="button" @click="open = !open" class="rounded-md px-2 py-1 text-sm text-zinc-500 hover:bg-gray-100 flex items-center gap-1">
+                    Use template
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </button>
+                  <div x-show="open" x-cloak class="absolute right-0 z-10 mt-1 w-48 rounded-md bg-white py-1 shadow-lg ring ring-gray-200">
+                    <template x-for="tpl in $store.app.templates" :key="tpl.name">
+                      <button type="button" @click="snippet.code = tpl.code; snippet.timeout = tpl.timeout; open = false" class="block w-full px-3 py-1.5 text-left text-sm text-zinc-700 hover:bg-gray-100" x-text="tpl.name"></button>
+                    </template>
+                  </div>
+                </div>
+              </div>
               <textarea :id="$id('code')" spellcheck="false" x-model="snippet.code" class="mt-1 rounded-md break-all flex-1 font-mono"></textarea>
             </div>
           </section>
