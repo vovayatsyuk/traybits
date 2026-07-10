@@ -200,7 +200,7 @@ document.getElementById('add').addEventListener('click', () => {
     timeout: 60,
     enabled: true,
   };
-  draft.push(snippet);
+  draft.unshift(snippet);
   createPanel(snippet);
   activeId = snippet.id;
   settingsOpen = false;
