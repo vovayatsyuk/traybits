@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="/main.js" defer></script>
   </head>
-  <body class="flex flex-col h-full divide-y divide-gray-200" x-data>
+  <body class="flex flex-col h-full divide-y divide-gray-200 border-t border-gray-200 overflow-hidden" x-data>
     <div class="flex flex-1 min-h-0 divide-x divide-gray-200">
       <aside class="w-48 shrink-0 flex flex-col gap-1 p-2">
         <button @click="$store.app.openSettings()" :class="{ 'bg-gray-100 text-zinc-600': $store.app.settingsOpen }" class="rounded-md px-3 py-2 text-sm text-left flex items-center gap-2 text-zinc-500 hover:bg-gray-100">
@@ -83,23 +83,21 @@
           <section x-show="$store.app.isSnippetActive(snippet.id)"
             x-id="['title', 'enabled', 'timeout', 'code']"
             class="flex flex-col gap-6 w-full max-w-2xl mx-auto min-h-full self-start rounded-lg bg-white p-6 ring ring-gray-200">
-            <div class="grid grid-cols-2 gap-4">
-              <div class="flex items-center gap-4">
-                <label :for="$id('title')" class="text-sm text-zinc-700">Title</label>
-                <input :id="$id('title')" type="text" placeholder="Snippet name" x-model="snippet.name" class="rounded-md flex-1">
-              </div>
-              <div class="flex items-center gap-2 justify-end">
-                <span class="text-sm text-zinc-700">Enabled</span>
-                <div class="group relative inline-flex w-11 shrink-0 rounded-full bg-gray-200 p-0.5 inset-ring inset-ring-gray-900/5 outline-offset-2 outline-blue-600 transition-colors duration-200 ease-in-out has-checked:bg-blue-600 has-focus-visible:outline-2">
-                  <span class="size-5 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-5"></span>
-                  <input type="checkbox" aria-label="Enabled" x-model="snippet.enabled" class="absolute inset-0 size-full appearance-none opacity-0 focus:outline-hidden">
-                </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-zinc-700 min-w-20">Enabled</span>
+              <div class="group relative inline-flex w-11 shrink-0 rounded-full bg-gray-200 p-0.5 inset-ring inset-ring-gray-900/5 outline-offset-2 outline-blue-600 transition-colors duration-200 ease-in-out has-checked:bg-blue-600 has-focus-visible:outline-2">
+                <span class="size-5 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-5"></span>
+                <input type="checkbox" aria-label="Enabled" x-model="snippet.enabled" class="absolute inset-0 size-full appearance-none opacity-0 focus:outline-hidden">
               </div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="flex items-center gap-4">
+            <div class="grid grid-cols-2 gap-8">
+              <div class="flex items-center gap-2">
+                <label :for="$id('title')" class="text-sm text-zinc-700 min-w-20">Title</label>
+                <input :id="$id('title')" type="text" placeholder="Snippet name" x-model="snippet.name" class="rounded-md flex-1">
+              </div>
+              <div class="flex items-center gap-2">
                 <label :for="$id('timeout')" class="text-sm text-zinc-700">Update every</label>
-                <input :id="$id('timeout')" type="number" min="1" x-model.number="snippet.timeout" class="ml-auto w-24 rounded-md">
+                <input :id="$id('timeout')" type="number" min="1" x-model.number="snippet.timeout" class="w-20 rounded-md">
                 <label :for="$id('timeout')" class="text-sm text-zinc-700">seconds</label>
               </div>
             </div>
