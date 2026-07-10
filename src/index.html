@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="/main.js" defer></script>
   </head>
-  <body class="flex flex-col h-full divide-y divide-gray-200 border-t border-gray-200 overflow-hidden" x-data>
+  <body class="flex flex-col h-full divide-y divide-gray-200 border-gray-200 overflow-hidden" x-data>
     <div class="flex flex-1 min-h-0 divide-x divide-gray-200">
       <aside class="w-48 shrink-0 flex flex-col gap-1 p-2">
         <button @click="$store.app.openSettings()" :class="{ 'bg-gray-100 text-zinc-600': $store.app.settingsOpen }" class="rounded-md px-3 py-2 text-sm text-left flex items-center gap-2 text-zinc-500 hover:bg-gray-100">

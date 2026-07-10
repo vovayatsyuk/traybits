@@ -4,6 +4,11 @@ import { listen } from '@tauri-apps/api/event';
 import * as Runner from './runner.js';
 import register from './app.js';
 
+// Window top border is only needed on macOS
+if (navigator.userAgent.includes('Mac')) {
+  document.body.classList.add('border-t');
+}
+
 window.Alpine = Alpine;
 Alpine.plugin(sort);
 register(Alpine);
