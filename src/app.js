@@ -114,6 +114,13 @@ export default function register(Alpine) {
       if (id === this.activeId) {
         this.activeId = (this.draft[index] ?? this.draft[index - 1])?.id;
       }
+
+      // Persist the removal immediately — draft may hold unsaved edits to others
+      this.snippets = this.snippets.filter(s => s.id !== id);
+      localStorage.setItem('traybits_snippets', JSON.stringify(this.snippets));
+      this.runners.delete(id);
+      this.syncTray();
+
       this.saveMessage = null;
     },
 
