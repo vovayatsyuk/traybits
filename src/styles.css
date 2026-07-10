@@ -5,6 +5,13 @@
   display: none !important;
 }
 
+.sortable-fallback {
+  display: none !important;
+}
+.sortable-ghost {
+  background-color: var(--color-gray-100);
+}
+
 @layer components {
   .chip {
     @apply inline-flex min-w-8 items-center justify-center rounded-md px-2.5 py-0.5 text-sm

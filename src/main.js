@@ -1,8 +1,11 @@
 import Alpine from 'alpinejs';
+import sort from '@alpinejs/sort';
 import { listen } from '@tauri-apps/api/event';
 import * as Runner from './runner.js';
 import register from './app.js';
 
+window.Alpine = Alpine;
+Alpine.plugin(sort);
 register(Alpine);
 Alpine.start();
 

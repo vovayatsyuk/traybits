@@ -105,6 +105,18 @@ export default function register(Alpine) {
       this.saveMessage = null;
     },
 
+    reorderSnippet(id, position) {
+      const from = this.draft.findIndex(s => s.id === id);
+      this.draft.splice(position, 0, ...this.draft.splice(from, 1));
+
+      // Persist the saved list in the new order — draft may hold unsaved edits
+      const order = new Map(this.draft.map((s, i) => [s.id, i]));
+      this.snippets.sort((a, b) => (order.get(a.id) ?? Infinity) - (order.get(b.id) ?? Infinity));
+      localStorage.setItem('traybits_snippets', JSON.stringify(this.snippets));
+      this.runners = new Map(this.snippets.map(s => [s.id, this.runners.get(s.id)]));
+      this.syncTray();
+    },
+
     async saveSnippets() {
       for (const snippet of this.draft) {
         snippet.timeout = Math.max(1, parseInt(snippet.timeout) || 60);
