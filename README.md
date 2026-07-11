@@ -9,7 +9,7 @@ App to display various information in the system tray using javascript snippets.
 
 ## Installation
 
-Download the latest release from [Releases](releases) and run the executable.
+Download the latest release from [Releases](https://github.com/vovayatsyuk/traybits/releases) and run the executable.
 The app is not signed, so you may need to allow it in your system settings.
 
 ### MacOS
@@ -35,6 +35,16 @@ want to use the app, please try to [build it](#developement) and let me know if
 it works.
 
 ## Snippets examples
+
+### Prompt for AI to generate snippet for your own idea
+
+```
+Write a self-contained JavaScript ES module. Export the main function as the
+default export. The function must return string to display in system tray.
+Return only the code.
+
+--Put your idea here--
+```
 
 ### Packagist download count
 
