@@ -1,17 +1,24 @@
-use std::{thread, time::Duration};
+use std::{sync::Mutex, thread, time::Duration};
 use tauri::{
     Emitter, Manager, WindowEvent,
     menu::{MenuBuilder, MenuItemBuilder},
     tray::{TrayIconBuilder, TrayIconId},
 };
 
-struct TrayState(TrayIconId);
+#[cfg(target_os = "linux")]
+mod linux;
+
+struct TrayState {
+    id: TrayIconId,
+    title: Mutex<String>,
+}
 
 #[tauri::command]
 fn set_tray_title(app: tauri::AppHandle, state: tauri::State<TrayState>, title: String) {
-    if let Some(tray) = app.tray_by_id(&state.0) {
-        let _ = tray.set_title(Some(title));
+    if let Some(tray) = app.tray_by_id(&state.id) {
+        let _ = tray.set_title(Some(&title));
     }
+    *state.title.lock().unwrap() = title;
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -74,11 +81,13 @@ pub fn run() {
                 })
                 .build(app)?;
 
-            #[cfg(target_os = "linux")] {
-                tray.set_icon(tauri::include_image!("icons/tray.png").into()).unwrap();
-            }
+            app.manage(TrayState {
+                id: tray.id().clone(),
+                title: Mutex::new(String::new()),
+            });
 
-            app.manage(TrayState(tray.id().clone()));
+            #[cfg(target_os = "linux")]
+            linux::setup_tray(app.handle(), &tray)?;
 
             let app = app.handle().clone();
             thread::spawn(move || {
