@@ -1,7 +1,7 @@
 [package]
 name = "Traybits"
-version = "0.2.0"
-description = "Bits of information in the system tray"
+version = "0.2.1"
+description = "App to display various information in the system tray using javascript snippets"
 authors = ["vova.yatsyuk@gmail.com"]
 edition = "2021"
 
