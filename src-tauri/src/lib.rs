@@ -58,6 +58,10 @@ pub fn run() {
                 )
                 .build()?;
 
+            // Must happen before the tray exists, see wait_for_tray_host.
+            #[cfg(target_os = "linux")]
+            linux::wait_for_tray_host(Duration::from_secs(10));
+
             let tray = TrayIconBuilder::new()
                 .menu(&menu)
                 .show_menu_on_left_click(true)

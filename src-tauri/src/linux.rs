@@ -1,9 +1,44 @@
-use std::{thread, time::Duration};
+use std::{
+    thread,
+    time::{Duration, Instant},
+};
 use tauri::{AppHandle, Manager, tray::TrayIcon};
 
 use crate::TrayState;
 
 const WATCHER: &str = "org.kde.StatusNotifierWatcher";
+
+// Block until a tray host owns the watcher name, or give up after `timeout`.
+//
+// libayatana-appindicator falls back to a legacy XEmbed GtkStatusIcon when the
+// watcher is missing at the moment the indicator goes active, and does not
+// reliably tear that fallback down once the watcher appears. The leftover is a
+// second icon in the panel: opaque background, and no label, since XAyatanaLabel
+// only exists on the D-Bus side. At login we race gnome-shell for this, so wait
+// for the host before building the tray. Building anyway on timeout keeps the
+// tray working on desktops that have no watcher at all.
+pub fn wait_for_tray_host(timeout: Duration) -> bool {
+    let Ok(connection) = zbus::blocking::Connection::session() else {
+        return false;
+    };
+    let Ok(dbus) = zbus::blocking::fdo::DBusProxy::new(&connection) else {
+        return false;
+    };
+    let Ok(watcher) = zbus::names::BusName::try_from(WATCHER) else {
+        return false;
+    };
+
+    let deadline = Instant::now() + timeout;
+    loop {
+        if dbus.name_has_owner(watcher.clone()).unwrap_or(false) {
+            return true;
+        }
+        if Instant::now() >= deadline {
+            return false;
+        }
+        thread::sleep(Duration::from_millis(100));
+    }
+}
 
 pub fn setup_tray(app: &AppHandle, tray: &TrayIcon) -> tauri::Result<()> {
     tray.set_icon(tauri::include_image!("icons/tray.png").into())?;
